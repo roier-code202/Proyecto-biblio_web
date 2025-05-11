@@ -1,0 +1,17 @@
+# Sistema de Gestión de Biblioteca Digital
+
+Este es un proyecto desarrollado en Laravel para gestionar libros, préstamos y usuarios de una biblioteca digital.
+
+## Requisitos previos
+
+- Tener instalado [PHP](https://www.php.net/) (versión 8.0 o superior).
+- Tener instalado [Composer](https://getcomposer.org/) para manejar dependencias de PHP.
+- Tener una base de datos MySQL configurada (XAMPP).
+
+## Pasos para ejecutar el proyecto
+
+1. **Clonar el repositorio**:
+   Abre tu terminal y clona el repositorio en tu máquina local:
+
+   ```bash
+   git clone https://github.com/tu-usuario/tu-repositorio.git
