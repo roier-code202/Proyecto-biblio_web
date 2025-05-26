@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\User;
+use App\Models\Book;
 use Illuminate\Http\Request;
 
 class LoanController extends Controller
@@ -10,7 +12,6 @@ class LoanController extends Controller
     // Mostrar todos los préstamos
     public function index()
     {
-        // Obtener todos los préstamos y pasarlos a la vista
         $loans = Loan::with('user', 'book')->get();
         return view('loans.index', compact('loans'));
     }
@@ -18,7 +19,9 @@ class LoanController extends Controller
     // Mostrar el formulario de creación de un préstamo
     public function create()
     {
-        return view('loans.create');
+        $users = User::all();
+        $books = Book::where('available', 1)->get(); // Solo libros disponibles
+        return view('loans.create', compact('users', 'books'));
     }
 
     // Almacenar un nuevo préstamo
@@ -32,6 +35,7 @@ class LoanController extends Controller
         ]);
 
         Loan::create($request->all());
+        Book::where('id', $request->book_id)->update(['available' => 0]);
 
         return redirect()->route('loans.index')->with('success', 'Préstamo creado con éxito.');
     }
@@ -58,8 +62,26 @@ class LoanController extends Controller
     // Eliminar un préstamo
     public function destroy(Loan $loan)
     {
+        $loan->book->update(['available' => 1]);
         $loan->delete();
 
         return redirect()->route('loans.index')->with('success', 'Préstamo eliminado con éxito.');
+    }
+
+    // Marcar un préstamo como devuelto
+    public function return(Loan $loan)
+    {
+        if ($loan->returned_at) {
+            return redirect()->back()->with('info', 'El libro ya fue devuelto.');
+        }
+
+        $loan->returned_at = now();
+        $loan->save();
+
+        // Marcar el libro como disponible
+        $loan->book->available = true;
+        $loan->book->save();
+
+        return redirect()->back()->with('success', 'Libro devuelto correctamente.');
     }
 }

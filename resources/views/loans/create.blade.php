@@ -1,14 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Registrar Préstamo</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Registrar Préstamo</h1>
 
-    <form action="{{ route('loans.store') }}" method="POST">
+    <form method="POST" action="{{ route('loans.store') }}" class="space-y-4">
         @csrf
 
-        <div class="form-group">
-            <label for="user_id">Usuario</label>
-            <select name="user_id" id="user_id" class="form-control" required>
+        <div>
+            <label for="user_id" class="block text-sm font-medium">Usuario</label>
+            <select name="user_id" id="user_id" class="w-full border p-2 rounded" required>
                 <option value="">Seleccionar Usuario</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -16,9 +17,9 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="book_id">Libro</label>
-            <select name="book_id" id="book_id" class="form-control" required>
+        <div>
+            <label for="book_id" class="block text-sm font-medium">Libro</label>
+            <select name="book_id" id="book_id" class="w-full border p-2 rounded" required>
                 <option value="">Seleccionar Libro</option>
                 @foreach($books as $book)
                     <option value="{{ $book->id }}">{{ $book->title }}</option>
@@ -26,16 +27,20 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="start_date">Fecha de Inicio</label>
-            <input type="date" name="start_date" id="start_date" class="form-control" required>
+        <div>
+            <label for="start_date" class="block text-sm font-medium">Fecha de Inicio</label>
+            <input type="date" name="start_date" id="start_date" class="w-full border p-2 rounded" required>
         </div>
 
-        <div class="form-group">
-            <label for="return_date">Fecha de Devolución</label>
-            <input type="date" name="return_date" id="return_date" class="form-control" required>
+        <div>
+            <label for="return_date" class="block text-sm font-medium">Fecha de Devolución</label>
+            <input type="date" name="return_date" id="return_date" class="w-full border p-2 rounded" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Registrar
+        </button>
+        <a href="{{ route('loans.index') }}" class="text-gray-600 hover:underline ml-4">Cancelar</a>
     </form>
+</div>
 @endsection

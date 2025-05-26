@@ -14,6 +14,7 @@ class Loan extends Model
         'book_id',
         'start_date',
         'return_date',
+        'returned_at', // 👈 Agregado
     ];
 
     public function user()

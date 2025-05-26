@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -18,17 +19,10 @@ class BookController extends Controller
         return view('books.create');
     }
 
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'genre' => 'required|string|max:255',
-        ]);
-
-        Book::create($request->all());
-
-        return redirect()->route('books.index');
+        Book::create($request->validated());
+        return redirect()->route('books.index')->with('success', 'Libro creado correctamente.');
     }
 
     public function edit(Book $book)
@@ -36,17 +30,10 @@ class BookController extends Controller
         return view('books.edit', compact('book'));
     }
 
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'genre' => 'required|string|max:255',
-        ]);
-
-        $book->update($request->all());
-
-        return redirect()->route('books.index');
+        $book->update($request->validated());
+        return redirect()->route('books.index')->with('success', 'Libro actualizado correctamente.');
     }
 
     public function destroy(Book $book)
