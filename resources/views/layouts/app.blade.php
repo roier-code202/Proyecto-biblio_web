@@ -14,6 +14,7 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ route('loans.index') }}">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('loans.create') }}">Nuevo Préstamo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('books.index') }}">Libros</a></li>
                     @auth
                         @if(Auth::user()->role === 'admin')
                             <li class="nav-item">

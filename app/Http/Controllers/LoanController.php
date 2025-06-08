@@ -6,13 +6,39 @@ use App\Models\Loan;
 use App\Models\User;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Exports\LoansExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class LoanController extends Controller
 {
     // Mostrar todos los préstamos
-    public function index()
+    public function index(Request $request)
     {
-        $loans = Loan::with('user', 'book')->get();
+        $query = \App\Models\Loan::with(['user', 'book']);
+
+        // Filtro por estado
+        if ($request->status === 'pending') {
+            $query->whereNull('returned_at')->where('return_date', '>=', now());
+        } elseif ($request->status === 'returned') {
+            $query->whereNotNull('returned_at');
+        } elseif ($request->status === 'overdue') {
+            $query->whereNull('returned_at')->where('return_date', '<', now());
+        }
+
+        // Filtro por búsqueda
+        if ($request->search) {
+            $search = $request->search;
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', "%$search%");
+            })->orWhereHas('book', function($q) use ($search) {
+                $q->where('title', 'like', "%$search%");
+            });
+        }
+
+        $loans = $query->orderByDesc('id')->paginate(10)->withQueryString();
+
         return view('loans.index', compact('loans'));
     }
 
@@ -83,5 +109,11 @@ class LoanController extends Controller
         $loan->book->save();
 
         return redirect()->back()->with('success', 'Libro devuelto correctamente.');
+    }
+
+    // Exportar préstamos a Excel
+    public function exportExcel()
+    {
+        return Excel::download(new LoansExport, 'prestamos.xlsx');
     }
 }

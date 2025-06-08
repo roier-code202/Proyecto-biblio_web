@@ -24,7 +24,7 @@ class BookRequest extends FormRequest
         return [
             'title'     => 'required|string|max:255',
             'author'    => 'required|string|max:255',
-            'genre'     => 'nullable|string|max:100',
+            'genre_id'  => 'required|exists:genres,id',
             'available' => 'boolean',
         ];
     }
