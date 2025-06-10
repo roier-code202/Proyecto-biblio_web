@@ -8,17 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('books', function (Blueprint $table) {
-            if (Schema::hasColumn('books', 'genre')) {
-                $table->dropColumn('genre');
-            }
-        });
-    }
-
-    public function down()
-    {
-        Schema::table('books', function (Blueprint $table) {
-            $table->string('genre')->nullable();
+        Schema::create('genres', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 };
